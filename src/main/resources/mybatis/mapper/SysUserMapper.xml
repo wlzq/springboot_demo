@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.wl.demo.mapper.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="org.wl.demo.entity.SysUser" >
+    <id column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="org.wl.demo.entity.SysUser" extends="BaseResultMap" >
+    <result column="userDesc" property="userdesc" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    userId, username, password, status
+  </sql>
+  <sql id="Blob_Column_List" >
+    userDesc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_user
+    where userId = #{userid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where userId = #{userid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.wl.demo.entity.SysUser" >
+    insert into sys_user (userId, username, password, 
+      status, userDesc)
+    values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{status,jdbcType=CHAR}, #{userdesc,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.wl.demo.entity.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="userdesc != null" >
+        userDesc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="userdesc != null" >
+        #{userdesc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.wl.demo.entity.SysUser" >
+    update sys_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="userdesc != null" >
+        userDesc = #{userdesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.wl.demo.entity.SysUser" >
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      userDesc = #{userdesc,jdbcType=LONGVARCHAR}
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.wl.demo.entity.SysUser" >
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR}
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectListByParam" resultMap="ResultMapWithBLOBs" parameterType="org.wl.demo.entity.SysUser">
+    select <include refid="Base_Column_List"/> from sys_user
+    <where>
+      1 = 1
+      <if test="username != null and username != ''">
+        and username = #{username,jdbcType=VARCHAR}
+      </if>
+    </where>
+    limit #{pageParameter.startNum}, #{pageParameter.pageSize}
+  </select>
+
+  <select id="selectCountByParam" parameterType="org.wl.demo.entity.SysUser" resultType="java.lang.Integer">
+    select count(1) from sys_user
+    <where>
+      1 = 1
+      <if test="username != null and username != ''">
+        and username = #{username,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+</mapper>
